@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useRef, useState } from "react";
 
-// Hardcoded URL
-const STREAM_URL = "http://localhost:3000/api/stream";
+const API_BASE_URL = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+const STREAM_URL = API_BASE_URL ? `${API_BASE_URL}/api/stream` : "/api/stream";
 
 export default function StreamPlayer({
   connected,
@@ -50,7 +50,8 @@ export default function StreamPlayer({
             setError(false);
           })
           .catch((e) => {
-            console.error("Autoplay prevented:", e);
+            const reason = e?.name ? `${e.name}: ${e.message}` : String(e);
+            console.error("Monitor playback failed:", reason);
             setError(true);
           });
       }
